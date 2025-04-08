@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFID System Prototype</title>
+    <style>
+        /* General Styling */
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header */
+        header {
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 2.5em;
+            color: #ff6f61;
+            margin: 0;
+        }
+        nav a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 1.1em;
+        }
+        nav a:hover {
+            color: #ff6f61;
+        }
+
+        /* Hero Section */
+        #hero {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        #hero h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        #hero p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #ff6f61;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #e65b50;
+        }
+
+        /* Simulation Section */
+        #simulation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        #diagram {
+            background: #333;
+            border-radius: 10px;
+        }
+        #diagram text {
+            fill: #fff;
+            font-size: 14px;
+        }
+        .active {
+            fill: #ff6f61;
+            transition: fill 0.3s;
+        }
+
+        /* Status Panel */
+        #status-panel {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        #status-panel div {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+
+        /* Log Panel */
+        #log-panel {
+            width: 800px;
+            height: 150px;
+            overflow-y: scroll;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            border-radius: 5px;
+        }
+
+        /* Controls */
+        #controls {
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 20px;
+            text-align: center;
+            background: #333;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>RFID System Prototype</h1>
+        <nav>
+            <a href="#home">HAMNA ALAM</a>
+            <a href="#about">JAWERIA LIAQUAT</a>
+            <a href="#prototype">Haya Fatima</a>
+            <a href="#contact">Khadija Jahangir</a>
+            <a href="#contact">Fatima Noor</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <h2>Explore the RFID System</h2>
+        <p>Click below to start the simulation and see how data flows through the RFID system.</p>
+        <button id="start-btn">Start Simulation</button>
+    </section>
+
+    <!-- Simulation Section -->
+    <section id="simulation">
+        <svg id="diagram" width="800" height="400">
+            <!-- RFID Components -->
+            <g id="tag">
+                <rect x="20" y="180" width="100" height="40" fill="#4a90e2" />
+                <text x="70" y="205" text-anchor="middle">Tag</text>
+            </g>
+            <g id="reader">
+                <rect x="170" y="180" width="100" height="40" fill="#4a90e2" />
+                <text x="220" y="205" text-anchor="middle">Reader</text>
+            </g>
+            <g id="logical-gates">
+                <rect x="320" y="180" width="100" height="40" fill="#4a90e2" />
+                <text x="370" y="205" text-anchor="middle">Logical Gates</text>
+            </g>
+            <g id="processor">
+                <rect x="470" y="180" width="100" height="40" fill="#4a90e2" />
+                <text x="520" y="205" text-anchor="middle">Processor</text>
+            </g>
+            <g id="ram">
+                <rect x="620" y="180" width="100" height="40" fill="#4a90e2" />
+                <text x="670" y="205" text-anchor="middle">RAM</text>
+            </g>
+            <g id="storage">
+                <rect x="770" y="180" width="100" height="40" fill="#4a90e2" />
+                <text x="820" y="205" text-anchor="middle">Storage</text>
+            </g>
+            <!-- Connecting Paths -->
+            <path d="M120,200 L170,200" stroke="#fff" stroke-width="2" />
+            <path d="M270,200 L320,200" stroke="#fff" stroke-width="2" />
+            <path d="M420,200 L470,200" stroke="#fff" stroke-width="2" />
+            <path d="M570,200 L620,200" stroke="#fff" stroke-width="2" />
+            <path d="M720,200 L770,200" stroke="#fff" stroke-width="2" />
+            <!-- Data Packet -->
+            <circle id="data-packet" cx="70" cy="200" r="5" fill="#ff6f61" />
+        </svg>
+
+        <!-- Status Indicators -->
+        <div id="status-panel">
+            <div id="power-status">Power: Stable</div>
+            <div id="heat-status">Heat: 25°C</div>
+            <div id="connectivity-status">Connectivity: Online</div>
+        </div>
+
+        <!-- Log Panel -->
+        <div id="log-panel">
+            <p>Simulation ready.</p>
+        </div>
+
+        <!-- Controls -->
+        <div id="controls">
+            <button id="pause-btn">Pause</button>
+            <button id="reset-btn">Reset</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>CREATED FOR ICT PROJECT WITH LOVE</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Component Positions
+        const positions = [
+            { id: 'tag', x: 70, y: 200 },
+            { id: 'reader', x: 220, y: 200 },
+            { id: 'logical-gates', x: 370, y: 200 },
+            { id: 'processor', x: 520, y: 200 },
+            { id: 'ram', x: 670, y: 200 },
+            { id: 'storage', x: 820, y: 200 }
+        ];
+
+        // Simulation Steps
+        const steps = [
+            {
+                from: 0,
+                to: 1,
+                log: 'RFID Tag emitting signal to Reader',
+                highlight: 'reader'
+            },
+            {
+                from: 1,
+                to: 2,
+                log: 'Reader processing signal and sending to Logical Gates',
+                highlight: 'logical-gates'
+            },
+            {
+                from: 2,
+                to: 3,
+                log: 'Logical Gates processing signal and sending to Processor',
+                highlight: 'processor'
+            },
+            {
+                from: 3,
+                to: 4,
+                log: 'Processor analyzing data and storing in RAM',
+                highlight: 'ram'
+            },
+            {
+                from: 4,
+                to: 5,
+                log: 'RAM sending data to Storage for archiving',
+                highlight: 'storage'
+            }
+        ];
+
+        // Status Variables
+        let powerStatus = 'stable';
+        let heat = 25; // °C
+        let connectivity = 'online';
+        let isPaused = false;
+
+        // Move Data Packet Animation
+        function movePacket(toX, toY, duration = 1000) {
+            return new Promise((resolve) => {
+                const packet = document.getElementById('data-packet');
+                const startX = parseFloat(packet.getAttribute('cx'));
+                const startY = parseFloat(packet.getAttribute('cy'));
+                const dx = toX - startX;
+                const dy = toY - startY;
+                const startTime = performance.now();
+
+                function animate(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    packet.setAttribute('cx', startX + dx * progress);
+                    packet.setAttribute('cy', startY + dy * progress);
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        resolve();
+                    }
+                }
+                requestAnimationFrame(animate);
+            });
+        }
+
+        // Highlight Active Component
+        function highlight(id) {
+            document.querySelectorAll('#diagram g rect').forEach(rect => rect.classList.remove('active'));
+            document.getElementById(id).querySelector('rect').classList.add('active');
+        }
+
+        // Log Messages
+        function log(message, type = 'info') {
+            const logPanel = document.getElementById('log-panel');
+            const p = document.createElement('p');
+            p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            p.style.color = type === 'error' ? 'red' : 'white';
+            logPanel.appendChild(p);
+            logPanel.scrollTop = logPanel.scrollHeight;
+        }
+
+        // Update Status Functions
+        function updatePower() {
+            if (Math.random() < 0.1) { // 10% chance of failure
+                powerStatus = 'unstable';
+                document.getElementById('power-status').textContent = 'Power: Unstable';
+                document.getElementById('power-status').style.color = 'red';
+            } else {
+                powerStatus = 'stable';
+                document.getElementById('power-status').textContent = 'Power: Stable';
+                document.getElementById('power-status').style.color = 'green';
+            }
+        }
+
+        function updateHeat() {
+            heat += 5; // Increase by 5°C per step
+            document.getElementById('heat-status').textContent = `Heat: ${heat}°C`;
+            if (heat > 70) {
+                document.getElementById('heat-status').style.color = 'red';
+            } else {
+                document.getElementById('heat-status').style.color = 'green';
+            }
+        }
+
+        function updateConnectivity() {
+            if (Math.random() < 0.15) { // 15% chance of failure
+                connectivity = 'offline';
+                document.getElementById('connectivity-status').textContent = 'Connectivity: Offline';
+                document.getElementById('connectivity-status').style.color = 'red';
+            } else {
+                connectivity = 'online';
+                document.getElementById('connectivity-status').textContent = 'Connectivity: Online';
+                document.getElementById('connectivity-status').style.color = 'green';
+            }
+        }
+
+        function checkStatus() {
+            updatePower();
+            updateHeat();
+            updateConnectivity();
+            if (powerStatus === 'unstable' || heat > 70 || connectivity === 'offline') {
+                log(`Simulation stopped due to ${powerStatus === 'unstable' ? 'power instability' : heat > 70 ? 'overheating' : 'connectivity loss'}`, 'error');
+                return false;
+            }
+            return true;
+        }
+
+        // Run Simulation
+        async function runSimulation() {
+            log('Simulation started');
+            // Reset statuses
+            powerStatus = 'stable';
+            heat = 25;
+            connectivity = 'online';
+            document.getElementById('power-status').textContent = 'Power: Stable';
+            document.getElementById('power-status').style.color = 'green';
+            document.getElementById('heat-status').textContent = 'Heat: 25°C';
+            document.getElementById('heat-status').style.color = 'green';
+            document.getElementById('connectivity-status').textContent = 'Connectivity: Online';
+            document.getElementById('connectivity-status').style.color = 'green';
+
+            // Reset packet position
+            const packet = document.getElementById('data-packet');
+            packet.setAttribute('cx', positions[0].x);
+            packet.setAttribute('cy', positions[0].y);
+
+            // Run through steps
+            for (let i = 0; i < steps.length; i++) {
+                if (isPaused) {
+                    await new Promise(resolve => {
+                        const interval = setInterval(() => {
+                            if (!isPaused) {
+                                clearInterval(interval);
+                                resolve();
+                            }
+                        }, 100);
+                    });
+                }
+                const step = steps[i];
+                await movePacket(positions[step.to].x, positions[step.to].y);
+                highlight(step.highlight);
+                log(step.log);
+                if (!checkStatus()) {
+                    break;
+                }
+                if (i === steps.length - 1) {
+                    log('Simulation completed successfully');
+                }
+            }
+        }
+
+        // Event Listeners for Buttons
+        document.getElementById('start-btn').addEventListener('click', () => {
+            isPaused = false;
+            runSimulation();
+        });
+
+        document.getElementById('pause-btn').addEventListener('click', () => {
+            isPaused = true;
+            log('Simulation paused');
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            isPaused = false;
+            log('Simulation reset');
+            const packet = document.getElementById('data-packet');
+            packet.setAttribute('cx', positions[0].x);
+            packet.setAttribute('cy', positions[0].y);
+            document.querySelectorAll('#diagram g rect').forEach(rect => rect.classList.remove('active'));
+            document.getElementById('log-panel').innerHTML = '<p>Simulation ready.</p>';
+        });
+    </script>
+</body>
+</html>
